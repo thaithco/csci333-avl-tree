@@ -21,11 +21,80 @@ bool BST<T>::find(T v) {
 
 template <typename T>
 void BST<T>::insert(T v) {
-  //TODO do
-  Node<T>* newNode = new Node<T>(v);
-  
-  
-  
+  //As per the book...
+  Node<T>** P = &root;
+  Node<T>* R;
+  bool critNodeFound = false;
+  Node<T>** critNode;
+  while(P != 0 && ((*P)->getValue()) != v){
+    if((*P)->getBalance()!=0){
+      critNodeFound = true
+      critNode = P;
+    }
+    if(v < (*P)->getValue()) P = &((*P)->getLeftChild());
+    else P = &((*P)->getRightChild());
+  }
+  if(P!=0) return;
+  Node<T>* toBeAdded = *P;
+  toBeAdded = new Node(v);
+  if(!critNodeFound) R = root;
+  Node<T>** C;
+  Node<T>** B;
+  int* d1=0;
+  int* d2=0;
+  int* d3=0;
+  else{
+    op(d1, C, v, critNode);
+    if ((*critNode)->getBalance() != (*d1)){
+      (*critNode)->setBalance(0);
+      R = *P;
+    }
+    else {
+      op(d2, B, v, C);
+      if((*d2) == (*d1)){
+        (*critNode)->setBalance(0);
+        (*C)->setBalance(0);
+      }
+      else{
+        op(d3, R, v, B);
+        if((*d3) == (*d2)){
+          (*critNode)->setBalance(0);
+          (*C)->setBalance((*d1));
+        }
+        else if ((*d3) == (*d2) * -1)
+          (*critNode)->setBalance(0);
+        else
+          (*critNode)->setBalance(0);
+        if((*d2) == 1)
+          rotateRight(C);
+        else
+          rotateLeft(C);
+        if((*d1) == 1)
+          rotateRight(critNode);
+        else
+          rotateRight(critNode);
+      }
+    }
+  }
+  while(R->getValue() != v){
+    op(R->getBalance(), R, v, R);
+  }
+}
+
+template <typename T>
+void BST<T>::op(int* d, Node<T>** Q, T v, Node<T>** P){
+  if (v == (*P)->getValue()){
+    d = 0;
+    Q = P;
+  }
+  else if {
+    d = -1;
+    Q = &((*P)->getLeftChild());
+  }
+  else {
+    d = 1;
+    Q = &((*P)->getRightChild());
+  }
 }
 
 template <typename T>
@@ -68,23 +137,23 @@ void BST<T>::remove(T v) {  // in order predecessor swap
 
 template <typename T>
 void BST<T>::print() {
-  traversalPrint(root);
+  inOrderTraversal(root);
 }
 
 template <typename T>
 void BST<T>::inOrderTraversal(Node<T>* root) {
   if(root != 0) {
-    traversalPrint(root->getLeftChild());
+    inOrderTraversal(root->getLeftChild());
     std::cout << root->getValue() << std::endl;
-    traversalPrint(root->getRightChild());
+    inOrderTraversal(root->getRightChild());
   }
 }
 
 template <typename T>
 void BST<T>::postOrderTraversal(Node<T>* root) {
   if(root != 0) {
-    traversalPrint(root->getLeftChild());
-    traversalPrint(root->getRightChild());
+    postOrderTraversal(root->getLeftChild());
+    postOrderTraversal(root->getRightChild());
     std::cout << root->getValue() << std::endl;
   }
 }
@@ -216,7 +285,7 @@ void BST<T>::rotateRight(Node<T>** crit){
   *crit->setRightChild(*temp&);
 }
 
-void BST<T>::rotateLeft(Node<T>* crit){
+void BST<T>::rotateLeft(Node<T>** crit){
   Node<T>** temp = crit;
   *crit = ((*temp)->getRightChild());
   *temp->setRightChild(*temp->getLeftChild());
