@@ -21,55 +21,67 @@ bool BST<T>::find(T v) {
 
 template <typename T>
 void BST<T>::insert(T v) {
+  Node<T>* toBeAdded = new Node<T>(v);
+  if(root == 0)
+    std::cout << "root == 0" << std::endl;
+    root = toBeAdded;
   //As per the book...
   Node<T>** P = &root;
   Node<T>* R;
   bool critNodeFound = false;
   Node<T>** critNode;
-  while(P != 0 && ((*P)->getValue()) != v){
+  if((*P) != 0){
+    std::cout << "P != 0" << std::endl;
+  }
+  while((*P) != 0 && ((*P)->getValue()) != v){
+    std::cout << "looking for spot" << std::endl;
     if((*P)->getBalance()!=0){
-      critNodeFound = true
+      critNodeFound = true;
       critNode = P;
+      std::cout << "critNodeFound" << std::endl;
     }
     if(v < (*P)->getValue()) P = &((*P)->getLeftChild());
     else P = &((*P)->getRightChild());
   }
   if(P!=0) return;
-  Node<T>* toBeAdded = *P;
-  toBeAdded = new Node(v);
-  if(!critNodeFound) R = root;
-  Node<T>** C;
-  Node<T>** B;
-  int* d1=0;
-  int* d2=0;
-  int* d3=0;
+  std::cout << "P == 0" << std::endl;
+  if(*P == root)
+    std::cout << "P is root" << std::endl;
+  (*P) = toBeAdded;
+  if(!critNodeFound)
+    R = root;
   else{
+    Node<T>** C = 0;
+    Node<T>** B = 0;
+    int d1=0;
+    int d2=0;
+    int d3=0;
     op(d1, C, v, critNode);
-    if ((*critNode)->getBalance() != (*d1)){
+    if ((*critNode)->getBalance() != d1){
       (*critNode)->setBalance(0);
       R = *P;
     }
     else {
       op(d2, B, v, C);
-      if((*d2) == (*d1)){
+      if(d2 == d1){
         (*critNode)->setBalance(0);
         (*C)->setBalance(0);
       }
       else{
-        op(d3, R, v, B);
-        if((*d3) == (*d2)){
+        op(d3, &R, v, B);
+        if(d3 == d2){
           (*critNode)->setBalance(0);
-          (*C)->setBalance((*d1));
+          (*C)->setBalance(d1);
         }
-        else if ((*d3) == (*d2) * -1)
+        else if (d3 == d2 * -1)
           (*critNode)->setBalance(0);
         else
           (*critNode)->setBalance(0);
-        if((*d2) == 1)
+        if(d2 == 1)
           rotateRight(C);
         else
           rotateLeft(C);
-        if((*d1) == 1)
+        if(d1 == 1)
           rotateRight(critNode);
         else
           rotateRight(critNode);
@@ -77,17 +89,18 @@ void BST<T>::insert(T v) {
     }
   }
   while(R->getValue() != v){
-    op(R->getBalance(), R, v, R);
+    int d = R->getBalance();
+    op(d, &(R), v, &(R));
   }
 }
 
 template <typename T>
-void BST<T>::op(int* d, Node<T>** Q, T v, Node<T>** P){
+void BST<T>::op(int& d, Node<T>** Q, T v, Node<T>** P){
   if (v == (*P)->getValue()){
     d = 0;
     Q = P;
   }
-  else if {
+  else if(v < (*P)->getValue()){
     d = -1;
     Q = &((*P)->getLeftChild());
   }
@@ -280,16 +293,17 @@ void BST<T>::levelTraversal(std::list< Node<T>* >* parents, int level) {
 template <typename T>
 void BST<T>::rotateRight(Node<T>** crit){
   Node<T>** temp = crit;
-  *crit = ((*temp)->getLeftChild());
-  *temp->setLeftChild(*temp->getRightChild());
-  *crit->setRightChild(*temp&);
+  crit = &((*temp)->getLeftChild());
+  (*temp)->setLeftChild(*(*temp)->getRightChild());
+  (*crit)->setRightChild((**temp));
 }
 
+template <typename T>
 void BST<T>::rotateLeft(Node<T>** crit){
   Node<T>** temp = crit;
-  *crit = ((*temp)->getRightChild());
-  *temp->setRightChild(*temp->getLeftChild());
-  *crit->setLeftChild(*temp&);
+  crit = &((*temp)->getRightChild());
+  (*temp)->setRightChild(*(*temp)->getLeftChild());
+  (*crit)->setLeftChild((**temp));
 }
 
 template class BST<int>;
