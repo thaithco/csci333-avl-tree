@@ -14,9 +14,7 @@ class BST {
   void levelTraversal(std::list< Node<T>* >* parents, int level);
   int pow(int a, int p);
   int depth(Node<T>* root, int dpth, int maxDepth);
-  void rotateRight(Node<T>** crit);
-  void rotateLeft(Node<T>** crit);
-  void op(int& d, Node<T>** Q, T v, Node<T>** P);
+  void op(int& d, Node<T>**& Q, T v, Node<T>** P);
 
  public:
   BST<T>();
@@ -27,6 +25,8 @@ class BST {
   void insert(T v);
   void print();
   void breadthPrint();
+  void rotateRight(Node<T>** crit);
+  void rotateLeft(Node<T>** crit);
 };
 
 
